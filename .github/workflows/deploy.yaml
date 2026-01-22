@@ -5,12 +5,9 @@ on:
     branches:
       - main
 
-env:
-  IMAGE_NAME: my-python-k8s-app
-
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout source code
@@ -24,16 +21,13 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest .
-
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/my-python-k8s-app:latest .
+    
     - name: Push Docker image
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-
-    - name: Setup kubeconfig
-      run: |
-        mkdir -p ~/.kube
-        echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/my-python-k8s-app:latest
+    
+    - name: Check Kubernetes access
+      run: kubectl get nodes
 
     - name: Deploy to Kubernetes
       run: |
