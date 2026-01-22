@@ -32,5 +32,5 @@ jobs:
     - name: Deploy to Kubernetes
       run: |
         kubectl apply -f k8s/
-        kubectl rollout status deployment python-app-deployment
+        kubectl rollout status deployment python-k8s-deployment
   
