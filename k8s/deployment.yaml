@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: python-container
-        image: faruk67/my-python-k8s-app:latest
+        image: DOCKER_USERNAME/my-python-k8s-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         resources:
