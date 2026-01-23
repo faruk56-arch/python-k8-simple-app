@@ -13,8 +13,8 @@ spec:
         app: python-app
     spec:
       containers:
-      - name: python-container
-        image: faruk67/my-python-k8s-app:latest
+      - name: python-app
+        image: IMAGE_PLACEHOLDER
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
