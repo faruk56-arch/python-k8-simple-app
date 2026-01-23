@@ -36,8 +36,21 @@ jobs:
       run: |
         sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|g" k8s/deployment.yaml
 
-    - name: Deploy to Kubernetes
+    - name: Deploy to Kubernetes (with auto-rollback)
       run: |
+        set -e
+
+        echo "🚀 Applying Kubernetes manifests..."
         kubectl apply -f k8s/
-        kubectl rollout status deployment python-k8s-deployment
+
+        echo "⏳ Waiting for rollout to finish..."
+        if ! kubectl rollout status deployment python-k8s-deployment --timeout=60s; then
+          echo "❌ Rollout failed — triggering rollback"
+          kubectl rollout undo deployment python-k8s-deployment
+          echo "🔁 Rollback completed"
+          exit 1
+        fi
+
+        echo "✅ Deployment successfully rolled out"
+
   
