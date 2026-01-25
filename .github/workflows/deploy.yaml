@@ -41,8 +41,8 @@ jobs:
         set -e
 
         echo "🚀 Applying Kubernetes manifests..."
-        helm upgrade --install python-app ./helm/python-app \ 
-        --set image.tag=${GITHUB_SHA}
+        helm upgrade --install python-app ./helm/python-app \
+          --set image.tag=${GITHUB_SHA}
 
         echo "⏳ Waiting for rollout to finish..."
         if ! kubectl rollout status deployment python-app --timeout=60s; then
