@@ -1,0 +1,45 @@
+# Default values for python-app.
+replicaCount: 2
+
+image:
+  repository: faruk67/my-python-k8s-app
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+  pullPolicy: Always
+
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5000
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: "python-app.local"
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+
+
+resources: 
+  requests:
+    cpu: 250m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+
+env:
+  ENVIRONMENT: DEVELOPMENT
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
