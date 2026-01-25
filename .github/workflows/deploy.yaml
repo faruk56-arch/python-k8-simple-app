@@ -41,13 +41,14 @@ jobs:
         set -e
 
         echo "🚀 Applying Kubernetes manifests..."
-        kubectl apply -f k8s/
+        helm upgrade --install python-app ./helm/python-app \ 
+        --set image.tag=${GITHUB_SHA}
 
         echo "⏳ Waiting for rollout to finish..."
-        if ! kubectl rollout status deployment python-k8s-deployment --timeout=60s; then
-          echo "❌ Rollout failed — triggering rollback"
-          kubectl rollout undo deployment python-k8s-deployment
-          echo "🔁 Rollback completed"
+        if ! kubectl rollout status deployment python-app --timeout=60s; then
+          echo "❌ Rollout failed — triggering helm rollback"
+          helm rollback python-app 
+          echo "🔁 Helm Rollback completed"
           exit 1
         fi
 
