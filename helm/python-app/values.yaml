@@ -3,7 +3,7 @@ replicaCount: 2
 
 image:
   repository: faruk67/my-python-k8s-app
-  tag: ""
+  tag: latest
   pullPolicy: Always
 
 
