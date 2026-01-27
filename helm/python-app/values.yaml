@@ -1,5 +1,5 @@
 # Default values for python-app.
-replicaCount: 2
+replicaCount: 3
 
 image:
   repository: faruk67/my-python-k8s-app
