@@ -4,6 +4,7 @@ metadata:
   name: {{ include "python-app.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: {{ include "python-app.name" . }}
