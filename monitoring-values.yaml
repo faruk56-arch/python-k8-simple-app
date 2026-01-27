@@ -1,0 +1,18 @@
+grafana:
+  enabled: true
+  adminPassword: "ChangeMe-StrongPassword"
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.local
+    path: /
+    pathType: Prefix
+
+prometheus:
+  ingress:
+    enabled: false
+
+alertmanager:
+  ingress:
+    enabled: false
