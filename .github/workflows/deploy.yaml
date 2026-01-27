@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - main
-
+permissions:
+  contents: write
 env:
   IMAGE_NAME: my-python-k8s-app
   IMAGE_TAG: ${{ github.sha }}
