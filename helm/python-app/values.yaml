@@ -3,7 +3,6 @@ replicaCount: 2
 
 image:
   repository: faruk67/my-python-k8s-app
-  # Overrides the image tag whose default is the chart appVersion.
   tag: latest
   pullPolicy: Always
 
