@@ -3,6 +3,11 @@ kind: Application
 metadata:
   name: python-app
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: python=faruk67/my-python-k8s-app
+    argocd-image-updater.argoproj.io/python.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/python.allow-tags: regexp:^([a-f0-9]{40})$
+    argocd-image-updater.argoproj.io/python.helm.image-tag: image.tag
 spec:
   project: default
 
@@ -24,3 +29,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
