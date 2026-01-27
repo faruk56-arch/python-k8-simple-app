@@ -29,19 +29,3 @@ jobs:
     
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}:${IMAGE_TAG}
-
-    # - name: Update Helm values with new image tag
-    #   run: |
-    #     sed -i "s/^  tag: .*/  tag: $IMAGE_TAG/" helm/python-app/values.yaml
-    #     git config user.name "github-actions"
-    #     git config user.email "github-actions@github.com"
-
-    #     if git diff --quiet; then
-    #       echo "No changes detected, skipping commit"
-    #       exit 0
-    #     fi
-
-    #     git add helm/python-app/values.yaml
-    #     git commit -m "chore: update image tag to $IMAGE_TAG"
-    #     git push
-    
