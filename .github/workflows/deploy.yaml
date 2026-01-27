@@ -1,5 +1,4 @@
 name: CI-CD-Kubernetes
-
 on:
   push:
     branches:
@@ -10,7 +9,7 @@ env:
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: self-hosted
 
     steps:
@@ -25,33 +24,23 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME }:${IMAGE_TAG } .
     
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-    
-    - name: Check Kubernetes access
-      run: kubectl get nodes
-    - name: Update image tag in deployment
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME }:${IMAGE_TAG }
+
+    - name: Update Helm values with new image tag
       run: |
-        sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}|g" k8s/deployment.yaml
+        sed -i "s/^  tag: .*/  tag: $IMAGE_TAG/" helm/python-app/values.yaml
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
 
-    - name: Deploy to Kubernetes (with auto-rollback)
-      run: |
-        set -e
-
-        echo "🚀 Applying Kubernetes manifests..."
-        helm upgrade --install python-app ./helm/python-app \
-          --set image.tag=${GITHUB_SHA}
-
-        echo "⏳ Waiting for rollout to finish..."
-        if ! kubectl rollout status deployment python-app --timeout=60s; then
-          echo "❌ Rollout failed — triggering helm rollback"
-          helm rollback python-app 
-          echo "🔁 Helm Rollback completed"
-          exit 1
+        if git diff --quiet; then
+          echo "No changes detected, skipping commit"
+          exit 0
         fi
 
-        echo "✅ Deployment successfully rolled out"
-
-  
+        git add helm/python-app/values.yaml
+        git commit -m "chore: update image tag to $IMAGE_TAG"
+        git push
+    
