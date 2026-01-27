@@ -4,7 +4,7 @@ replicaCount: 3
 image:
   repository: faruk67/my-python-k8s-app
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 6a0e336da2cf947d723d03257b2e8c6b60b3ab60
+  tag: ab715625d9c2a3f7f942ae3a67907f245ae60063
   pullPolicy: Always
 
 
