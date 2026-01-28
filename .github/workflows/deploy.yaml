@@ -27,19 +27,29 @@ jobs:
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}:${IMAGE_TAG} .
     
-    - name: Scan image with Trivy
+    - name: Scan image with Trivy(critical only)
       uses: aquasecurity/trivy-action@0.20.0
       with:
         image-ref: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-        format: json
-        output: trivy-report.json
-        exit-code: 0
-        # severity: CRITICAL
-    - name: Upload Trivy report
-      uses: actions/upload-artifact@v4
-      with:
-        name: trivy-report
-        path: trivy-report.json
+        format: table
+        severity: CRITICAL
+        exit-code: 1
         
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}:${IMAGE_TAG}
+
+
+
+    # stronly recommended to enable image scanning in CI/CD pipeline  
+    # - name: Scan image with Trivy
+    #   uses: aquasecurity/trivy-action@0.20.0
+    #   with:
+    #     image-ref: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+    #     format: json
+    #     output: trivy-report.json
+    #     exit-code: 0
+    # - name: Upload Trivy report
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: trivy-report
+    #     path: trivy-report.json
